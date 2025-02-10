@@ -45,13 +45,14 @@ jobs:
 
       - name: Execute and Test SQL answers
         run: |
-          # Run the student's SQL file if it exists
-          if [ -f ./answers.sql ]; then
-            sudo mysql -u$DB_USER -p$DB_PASSWORD $DB_DATABASE < ./answers.sql
-          else
-            echo "The answers.sql file is missing or empty. Failing the workflow."
-            exit 1
-          fi
+            # Check if the answers.sql file exists and is not empty
+            if [ -f ./answers.sql ] && [ -s ./answers.sql ]; then
+              sudo mysql -u$DB_USER -p$DB_PASSWORD $DB_DATABASE < ./answers.sql
+            else
+              echo "The answers.sql file is either missing or empty. Failing the workflow."
+              exit 1
+            fi
+  
 
       - name: Mark test successful
         run: echo "All tests passed successfully"
